@@ -6,27 +6,27 @@ CodeNest to aplikacja edukacyjna umożliwiająca naukę programowania stron inte
 
 Strona głowna
 
-[![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/Home.png)
+![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/Home.png)
 
 Edytor kodu
 
-[![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/edytorkodu.png)
+![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/edytorkodu.png)
 
 Quiz
 
-[![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/quiz.png)
+![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/quiz.png)
 
 Nauka
 
-[![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/nauka.png)
+![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/nauka.png)
 
 Etap nauki
 
-[![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/etapnauki.png)
+![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/etapnauki.png)
 
 Quiz
 
-[![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/quiz.png)
+![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/quiz.png)
 
 ## Instalacja programu
 
