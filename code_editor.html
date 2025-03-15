@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edytor HTML i CSS</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #editor-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px;
+        }
+        textarea {
+            width: 30%;
+            height: 200px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        iframe {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+        #chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        #chat-window {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 500px;
+            background-color: white;
+            color: black;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        #chat-messages {
+            height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        #chat-input {
+            width: calc(100% - 60px);
+            padding: 10px;
+            border: none;
+            border-top: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Edytor HTML, CSS i JS</h1>
+
+    <div id="editor-container">
+        <textarea id="html-code" placeholder="Wpisz kod HTML..."><h1>Hello!</h1></textarea>
+        <textarea id="css-code" placeholder="Wpisz kod CSS...">h1 { color: blue; }</textarea>
+        <textarea id="js-code" placeholder="Wpisz kod JavaScript...">console.log("Działa!")</textarea>
+    </div>
+    
+    <button onclick="runCode()">Uruchom kod</button>
+    <iframe id="output"></iframe>
+    <button onclick="goBack()">Powrót do menu</button>
+
+    <!-- Ikona chatu -->
+    <div id="chat-icon" onclick="toggleChat()">
+        💬
+    </div>
+
+    <!-- Okno chatu -->
+    <div id="chat-window">
+        <div id="chat-messages"></div>
+        <input type="text" id="chat-input" placeholder="Napisz wiadomość..." onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()">Wyślij</button>
+    </div>
+    
+    <script src="http://localhost:3001/socket.io/socket.io.js"></script>
+
+    <script>
+        function runCode() {
+            const html = document.getElementById("html-code").value;
+            const css = document.getElementById("css-code").value;
+            const js = document.getElementById("js-code").value;
+            const output = document.getElementById("output").contentDocument;
+    
+            output.open();
+            output.write(`
+                <html>
+                <head>
+                    <style>${css}</style>
+                </head>
+                <body>
+                    ${html}
+                    <script>${js}<\/script>
+                </body>
+                </html>
+            `);
+            output.close();
+        }
+    
+        function goBack() {
+            window.location.href = "index.html";
+        }
+    
+        function toggleChat() {
+            const chatWindow = document.getElementById("chat-window");
+            chatWindow.style.display = chatWindow.style.display === "none" ? "block" : "none";
+        }
+    
+        function sendMessage() {
+            const input = document.getElementById("chat-input");
+            const message = input.value;
+            if (message.trim() === "") return;
+    
+            const chatMessages = document.getElementById("chat-messages");
+            const userMessage = document.createElement("div");
+            userMessage.textContent = "Ty: " + message;
+            chatMessages.appendChild(userMessage);
+    
+            input.value = "";
+    
+            // Wyślij wiadomość do serwera z obsługą błędów
+            try {
+                socket.emit("sendMessage", { message });
+            } catch (error) {
+                console.error("Błąd podczas wysyłania wiadomości:", error);
+            }
+        }
+    
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        }
+    
+        const socket = io("http://localhost:3001");
+    
+        // Odbieranie wiadomości od serwera z obsługą błędów
+        socket.on("receiveMessage", (data) => {
+            try {
+                console.log("Otrzymano wiadomość od bota:", data); // Dodaj ten log
+                const chatMessages = document.getElementById("chat-messages");
+                const botMessage = document.createElement("div");
+                botMessage.textContent = "NestBot: " + data.text;
+                chatMessages.appendChild(botMessage);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } catch (error) {
+                console.error("Błąd podczas przetwarzania wiadomości od bota:", error);
+            }
+        });
+    
+        // Obsługa błędów z serwera
+        socket.on("error", (errorMessage) => {
+            try {
+                console.log("Błąd:", errorMessage); // Dodaj ten log
+                const chatMessages = document.getElementById("chat-messages");
+                const errorDiv = document.createElement("div");
+                errorDiv.textContent = "Błąd: " + errorMessage;
+                chatMessages.appendChild(errorDiv);
+            } catch (error) {
+                console.error("Błąd podczas przetwarzania błędu:", error);
+            }
+        });
+    </script>
+</body>
+</html>

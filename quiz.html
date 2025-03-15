@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="quiz">
+        <h1>Quiz: Sprawdź swoją wiedzę!</h1>
+        <p id="question-number"></p>
+        <p id="question">Ładowanie pytania...</p>
+    
+        <button id="answer1" onclick="answer(1)">Odpowiedź 1</button>
+        <button id="answer2" onclick="answer(2)">Odpowiedź 2</button>
+        <button id="answer3" onclick="answer(3)">Odpowiedź 3</button>
+    
+        <p id="result"></p>
+        <button id="tryAgain" onclick="tryAgain()">Spróbuj ponownie</button>
+        <button class="back-button" onclick="goBack()">&#8592;</button>
+    </div>
+    
+    <script>
+        const questions = [
+            {
+                question: "Co oznacza HTML?",
+                answers: ["HyperText Markup Language", "High Tech Machine Learning", "Home Tool Making Language"],
+                correct: 1
+            },
+            {
+                question: "Który tag używamy do nagłówka?",
+                answers: ["<p>", "<h1>", "<title>"],
+                correct: 2
+            },
+            {
+                question: "Co oznacza CSS?",
+                answers: ["Cascading Style Sheets", "Computer Style Sheets", "Creative Style Sheets"],
+                correct: 1
+            },
+            {
+                question: "Który selektor CSS wybiera elementy na podstawie ich klasy?",
+                answers: ["#", ".", "*"],
+                correct: 2
+            },
+            {
+                question: "Który z poniższych jest poprawnym sposobem na dodanie koloru tła w CSS?",
+                answers: ["color: red;", "font-color: red;", "background-color: red;"],
+                correct: 3
+            },
+            {
+                question: "Który z poniższych jest przykładem selektora ID w CSS?",
+                answers: ["#id", ".id", "*id"],
+                correct: 1
+            },
+            {
+                question: "Który z poniższych jest przykładem selektora atrybutu w CSS?",
+                answers: ["input.text", "input#text", "input[type='text']"],
+                correct: 3
+            },
+            {
+                question: "Który z poniższych jest przykładem pseudoklasy w CSS?",
+                answers: ["::before", ":hover", ":after"],
+                correct: 2
+            },
+            {
+                question: "Który z poniższych jest przykładem właściwości Flexbox?",
+                answers: ["display: flex;", "display: block;", "display: inline;"],
+                correct: 1
+            },
+            {
+                question: "Który z poniższych jest poprawnym sposobem na dodanie koloru tekstu w CSS?",
+                answers: ["color: blue;", "background-color: blue;", "font-color: blue;"],
+                correct: 1
+            }
+        ];
+
+        let currentQuestion = 0;
+        let correctAnswers = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            document.getElementById("question-number").innerText = `Pytanie ${currentQuestion + 1} z ${questions.length}`;
+            document.getElementById("question").innerText = questions[currentQuestion].question;
+            const buttons = document.querySelectorAll("#answer1, #answer2, #answer3");
+            buttons.forEach((btn, i) => {
+                btn.innerText = questions[currentQuestion].answers[i];
+                btn.disabled = false;
+                btn.classList.remove('correct', 'incorrect');
+            });
+            answered = false;
+        }
+
+        function answer(choice) {
+            if (answered) return;
+            answered = true;
+            const buttons = document.querySelectorAll("#answer1, #answer2, #answer3");
+            buttons.forEach((btn, i) => {
+                btn.disabled = true;
+                if (i + 1 === questions[currentQuestion].correct) {
+                    btn.classList.add('correct');
+                } else if (i + 1 === choice) {
+                    btn.classList.add('incorrect');
+                }
+            });
+            if (choice === questions[currentQuestion].correct) {
+                correctAnswers++;
+            }
+            setTimeout(nextQuestion, 2000);
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+                document.getElementById("result").innerText = "";
+            } else {
+                document.getElementById("question-number").innerText = "";
+                let summary = "Koniec quizu! Poprawne odpowiedzi: " + correctAnswers + " z " + questions.length + ". ";
+                if (correctAnswers === questions.length) {
+                    summary += "Świetnie!";
+                } else if (correctAnswers > questions.length / 2) {
+                    summary += "Dobrze!";
+                } else {
+                    summary += "Spróbuj ponownie.";
+                }
+                document.getElementById("question").innerText = summary;
+                document.querySelectorAll("#answer1, #answer2, #answer3").forEach(btn => btn.style.display = 'none');
+            }
+        }
+
+        function tryAgain() {
+            currentQuestion = 0;
+            correctAnswers = 0;
+            loadQuestion();
+            document.getElementById("result").innerText = "";
+        }
+
+        function goBack() {
+            window.location.href = "index.html";
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>

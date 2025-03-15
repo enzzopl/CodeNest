@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lekcja</title>
+    <link rel="stylesheet" href="style.css">  
+</head>
+<body>
+    <button class="back-button" onclick="goBack()">&#8592;</button>
+    
+    <div id="lesson-map" class="lesson-map">
+        <!-- Kafelki lekcji będą tutaj -->
+    </div>
+
+    <div id="lesson-content" class="lesson-content" style="display: none;">
+        <h1 id="lesson-title"></h1>
+        <div id="lesson-description"></div>
+        <div id="lesson-preview"></div>
+        <div id="lesson-wyjasnienie"></div>
+        
+        <button onclick="PreviousLesson()">&#8592;</button>
+        <button onclick="showMap()">Powrót do mapy lekcji</button>
+        <button onclick="NextLesson()">&#8594;</button>
+    </div>
+
+    <script>
+        console.log("Script is running");
+
+        let lessons = [
+            {
+                id: 1,
+                title: "Wprowadzenie do HTML",
+                content: `
+                    <p>HTML (HyperText Markup Language) to podstawowy język do tworzenia stron internetowych. W tej lekcji dowiesz się, czym jest HTML i jak go używać do tworzenia prostych stron internetowych.</p>
+                    <pre><code><span class="brackets">&lt;!DOCTYPE html&gt;</span>
+<span class="brackets">&lt;html&gt;</span>
+<span class="brackets">&lt;head&gt;</span>
+    <span class="brackets">&lt;title&gt;</span>Moja pierwsza strona<span class="brackets">&lt;/title&gt;</span>
+<span class="brackets">&lt;/head&gt;</span>
+<span class="brackets">&lt;body&gt;</span>
+    <span class="brackets">&lt;h1&gt;</span>Witaj świecie!<span class="brackets">&lt;/h1&gt;</span>
+<span class="brackets">&lt;/body&gt;</span>
+<span class="brackets">&lt;/html&gt;</span></code></pre>
+                `,
+                preview: `
+                    <h1>Witaj świecie!</h1>
+                `,
+                wyjasnienie:`
+    <h4>Wyjaśnienie działania znaczników:</h4> <br>
+<br>
+   -Znacznik head w HTML to element, który zawiera metadane strony internetowej. Jest umieszczony na początku dokumentu HTML,
+    tuż po otwierającym znaczniku html, a przed body.<br>
+<br>
+   -Znacznik body w HTML oznacza główną część strony, która zawiera treści widoczne dla użytkowników, takie jak teksty, obrazy,
+    filmy, linki, formularze czy przyciski.<br>
+    <br>
+   -Znacznik title w HTML określa tytuł strony, który pojawia się w pasku tytułowym lub karcie przeglądarki. Jest ważny dla
+    SEO(optymalizacja pod kątem wyszukiwarek), pomagając wyszukiwarkom zrozumieć temat strony.<br>
+<br>
+   -Znacznik h1 w HTML definiuje najważniejszy nagłówek strony, oznaczający jej główny temat. Jest wyświetlany w większym
+    rozmiarze i ma najwyższy priorytet w hierarchii nagłówków.
+                `
+            },
+            {
+                id: 2,
+                title: "Podstawowe tagi HTML",
+                content: `
+                    <p>Najważniejsze tagi w HTML to: <span class="brackets">&lt;h1&gt;</span> - <span class="brackets">&lt;h6&gt;</span> (nagłówki), <span class="brackets">&lt;p&gt;</span> (paragrafy), <span class="brackets">&lt;a&gt;</span> (linki) i <span class="brackets">&lt;img&gt;</span> (obrazy). W tej lekcji nauczysz się, jak używać tych tagów do tworzenia struktury strony.</p>
+                    <pre><code><span class="brackets">&lt;h1&gt;</span>Nagłówek 1<span class="brackets">&lt;/h1&gt;</span>
+<span class="brackets">&lt;p&gt;</span>To jest paragraf.<span class="brackets">&lt;/p&gt;</span>
+<span class="brackets">&lt;a href="https://example.com"&gt;</span>To jest link<span class="brackets">&lt;/a&gt;</span>
+<span class="brackets">&lt;img src="obraz.jpg" alt="Opis obrazu"&gt;</span></code></pre>
+                `,
+                preview: `
+                    <h1>Nagłówek 1</h1>
+                    <p>To jest paragraf.</p>
+                    <a href="https://example.com">To jest link</a>
+                    <img src="obraz.jpg" alt="Opis obrazu">
+                `,
+                wyjasnienie:`
+                <h4>Wyjaśnienie działania znaczników:</h4> <br>
+            -Znacznik p w HTML definiuje paragraf, oddzielając tekst na akapity i poprawiając organizację treści na stronie.<br>
+            <br>
+            -Znacznik a w HTML tworzy hiperłącze, umożliwiając łączenie z innymi stronami lub zasobami. Atrybut href określa adres docelowy.<br>
+            <br>
+            -Znacznik img w HTML osadza obrazek na stronie. Atrybut src określa źródło obrazu, a alt tekst alternatywny.<br>
+            `
+            },
+            {
+                id: 3,
+                title: "Struktura dokumentu HTML",
+                content: `
+                    <p>Każda strona HTML ma <span class="brackets">&lt;html&gt;</span>, <span class="brackets">&lt;head&gt;</span> i <span class="brackets">&lt;body&gt;</span>. W tej lekcji dowiesz się, jak zorganizować te elementy, aby stworzyć poprawny dokument HTML.</p>
+                    <pre><code><span class="brackets">&lt;!DOCTYPE html&gt;</span>
+<span class="brackets">&lt;html&gt;</span>
+<span class="brackets">&lt;head&gt;</span>
+    <span class="brackets">&lt;meta charset="UTF-8"&gt;</span>
+    <span class="brackets">&lt;title&gt;</span>Struktura dokumentu HTML<span class="brackets">&lt;/title&gt;</span>
+<span class="brackets">&lt;/head&gt;</span>
+<span class="brackets">&lt;body&gt;</span>
+    <span class="brackets">&lt;h1&gt;</span>Nagłówek<span class="brackets">&lt;/h1&gt;</span>
+    <span class="brackets">&lt;p&gt;</span>Paragraf<span class="brackets">&lt;/p&gt;</span>
+<span class="brackets">&lt;/body&gt;</span>
+<span class="brackets">&lt;/html&gt;</span></code></pre>
+                `,
+                preview: `
+                    <h1>Nagłówek</h1>
+                    <p>Paragraf</p>
+                `,
+                wyjasnienie:`
+                <h4>Wyjaśnienie działania znaczników:</h4> <br>
+                -Znacznik meta charset w HTML określa kodowanie znaków strony, np. UTF-8, zapewniając poprawne wyświetlanie tekstu.
+                `
+            },
+            {
+                id: 4,
+                title: "Wprowadzenie do CSS",
+                content: `
+                    <p>CSS (Cascading Style Sheets) to język służący do opisywania wyglądu dokumentu HTML. W tej lekcji dowiesz się, jak używać CSS do stylizowania swojej strony.</p>
+                    <pre><code>
+<span class="gold">body {</span>
+  font-family: Arial, sans-serif;
+<span class="gold">}</span>
+
+<span class="gold">h1 {</span>
+color: blue;
+<span class="gold">}</span>
+   </code></pre>
+                `,
+                preview: `
+                    <style>
+                       body { 
+                             font-family: Arial, sans-serif; 
+                        }
+                        #naglowek {
+                            color: blue;
+                        }
+                    </style>
+                    <h1 id="naglowek">Przykładowy nagłówek</h1>
+                `,
+                wyjasnienie:`
+                <h4>Wyjaśnienie działania znaczników:</h4> <br>
+                -body  {font-family: Arial, sans-serif;} <br>
+                Ustawia czcionkę dla całej strony (elementu body) na Arial. Jeśli czcionka Arial nie jest dostępna, zostanie użyta czcionka z grupy sans-serif.<br>
+                <br>
+                -h1 { color: blue; }<br>
+                Ustawia kolor tekstu dla nagłówków h1 na niebieski.<br>
+                <br>
+                -Cała strona będzie używać czcionki Arial, a nagłówki h1 będą niebieskie.
+                `
+            },
+            {
+                id: 5,
+                title: "Podstawowe selektory CSS",
+                content: `
+                    <p>Selektory CSS pozwalają na wybieranie elementów HTML, które chcesz stylizować. W tej lekcji nauczysz się, jak używać podstawowych selektorów CSS.</p>
+                    <pre><code><span class="green">/* Selektor elementu */</span>
+<span class="gold">p {</span>
+    color: red;
+<span class="gold">}</span>
+
+<span class="green">/* Selektor klasy */</span>
+<span class="gold">.klasa {</span>
+    font-size: 20px;
+<span class="gold">}</span>
+
+<span class="green">/* Selektor ID */</span>
+<span class="gold"> #id { </span>
+    background-color: yellow;
+<span class="gold">}</span>
+    </code></pre>
+                `,
+                preview: `
+                    <style>
+                        #p1 {
+                            color: red;
+                        }
+                        .klasa {
+                            font-size: 20px;
+                        }
+                        #id {
+                            background-color: yellow;
+                        }
+                    </style>
+                    <p id="p1">Przykładowy paragraf</p>
+                    <p class="klasa">Przykładowy paragraf z klasą</p>
+                    <p id="id">Przykładowy paragraf z ID</p>
+                `,
+                wyjasnienie:`
+                <h4>Wyjaśnienie działania znaczników:</h4> <br>
+     - p { color: red; } <br>
+ Ustawia kolor tekstu dla wszystkich paragrafów (<p>) na czerwony.<br>
+<br>
+       - .klasa { font-size: 20px; }<br>
+Selektor klasy .klasa ustawia rozmiar czcionki dla wszystkich elementów z klasą klasa na 20 pikseli.<br>
+<br>
+- #id { background-color: yellow; }<br>
+Selektor ID #id ustawia tło dla elementu z ID id na żółte.<br>
+                `
+            },
+            {
+                id: 6,
+                title: "Kolory w CSS",
+                content: `
+                    <p>CSS pozwala na ustawianie kolorów elementów HTML. W tej lekcji nauczysz się, jak używać właściwości <code>color</code> i <code>background-color</code> do zmiany kolorów tekstu i tła.</p>
+                    <pre><code>
+<span class="green">/* Kolor tekstu */</span>
+<span class="gold">p {</span>
+color: blue;
+<span class="gold">}</span>
+
+<span class="green">/* Kolor tła */</span>
+<span class="gold">div {</span>
+background-color: lightgray;
+<span class="gold">}</span></code></pre>
+                `,
+                preview: `
+                    <style>
+                        #p1 {
+                            color: blue;
+                        }
+                        #d1 {
+                            background-color: lightgray;
+                        }
+                    </style>
+                    <p id="p1">Przykładowy paragraf</p>
+                    <div id="d1">Przykładowy div</div>
+                `,
+                wyjasnienie:`
+                <h4>Wyjaśnienie działania znaczników:</h4> <br>
+               -p { color: blue; }:<br>
+Ta reguła CSS zmienia kolor tekstu w elementach <p> na niebieski.<br>
+    <br>
+    -div { background-color: lightgray; }:<br>
+Ta reguła CSS zmienia tło elementu <div> na jasnoszare.<br>
+                `
+            },
+            {
+                id: 7,
+                title: "Zaawansowane selektory CSS",
+                content: `
+                    <p>Zaawansowane selektory CSS pozwalają na bardziej precyzyjne wybieranie elementów HTML. W tej lekcji nauczysz się, jak używać zaawansowanych selektorów CSS.</p>
+                    <pre><code>
+<span class="green">/* Selektor atrybutu */</span>
+<span class="gold">input[type="text"] {</span>
+    border: 1px solid #ccc;
+<span class="gold">}</span>
+
+<span class="green">/* Selektor potomka */ </span>
+<span class="gold">ul li { </span>
+    list-style-type: none;
+<span class="gold">}</span>
+
+<span class="green">/* Selektor pseudoklasy */ </span>
+<span class="gold">a:hover {</span>
+
+    color: red;
+<span class="gold">}</span></code></pre>
+                `,
+                preview: `
+                    <style>
+                        #pt1 {
+                            border: 1px solid #ccc;
+                        }
+                        #l1 li {
+                            list-style-type: none;
+                        }
+                        #a1:hover {
+                            color: red;
+                        }
+                    </style>
+                    <input id="pt1" type="text" placeholder="Przykładowe pole tekstowe">
+                    <ul id="l1">
+                        <li>Element listy</li>
+                        <li>Element listy</li>
+                    </ul>
+                    <a id="a1" href="#">Przykładowy link</a>
+                `,
+                wyjasnienie:`
+                <h4>Wyjaśnienie działania znaczników:</h4> <br>
+               -input[type="text"] { border: 1px solid #ccc; }<br>
+Ta reguła dotyczy elementów input, które mają atrybut type ustawiony na "text" (czyli pola tekstowe).<br>
+border: 1px solid #ccc; oznacza, że:<br>
+1px : grubość obramowania to 1 piksel.<br>
+solid : obramowanie jest ciągłe (nie przerywane).<br>
+#ccc : kolor obramowania to jasny szary (#ccc to kolor w systemie szesnastkowym).<br>
+<br>
+- ul li { list-style-type: none; }<br>
+Ta reguła dotyczy elementów li (elementy listy) wewnątrz ul (lista nieuporządkowana).<br>
+list-style-type: none; usuwa domyślne punkty (lub numery) przed każdym elementem listy.<br>
+<br>
+- a:hover { color: red; }<br>
+Ta reguła dotyczy linków (a), gdy użytkownik najedzie myszką na dany link.<br>
+:hover to pseudo-klasa, która aktywuje się, gdy użytkownik najeżdża kursorem na element.<br>
+color: red; zmienia kolor tekstu linku na czerwony, gdy użytkownik umieści kursor nad linkiem.<br>
+
+                `
+            },
+            {
+                id: 8,
+                title: "Wprowadzenie do Flexbox",
+                content: `
+                    <p>Flexbox to nowoczesny sposób układania elementów na stronie. W tej lekcji dowiesz się, jak używać Flexbox do tworzenia elastycznych układów.</p>
+                    <pre><code><span class="gold">.container {</span>
+    display: flex;
+    justify-content: center;
+    align-items: center;
+<span class="gold">}</span>
+
+<span class="gold">.item {</span>
+    flex: 1;
+    padding: 10px;
+<span class="gold">}</span></code></pre>
+                `,
+                preview: `
+                    <style>
+                        .container {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+                        .item {
+                            flex: 1;
+                            padding: 10px;
+                        }
+                    </style>
+                    <div class="container">
+                        <div class="item">Element 1</div>
+                        <div class="item">Element 2</div>
+                        <div class="item">Element 3</div>
+                    </div>
+                `,
+                wyjasnienie:`
+                <h4>Wyjaśnienie działania znaczników:</h4> <br>
+               -.container:<br>
+display: flex; : Ustawia kontener jako flexbox, co pozwala na elastyczne rozmieszczanie elementów.<br>
+justify-content: center; : Wyśrodkowuje elementy poziomo.<br>
+align-items: center; : Wyśrodkowuje elementy pionowo.<br>
+<br>
+-.item:<br>
+flex: 1; : Sprawia, że elementy .item dzielą równą przestrzeń w kontenerze.<br>
+padding: 10px; : Dodaje wewnętrzną przestrzeń w każdym elemencie.<br>
+                `
+            },
+            // JavaScript Lessons
+            {
+                id: 9,
+                title: "Wprowadzenie do JavaScript",
+                content: `
+                    <p>JavaScript to język programowania, który pozwala na dodawanie interaktywności do stron internetowych. W tej lekcji dowiesz się, jak używać JavaScript do tworzenia dynamicznych stron.</p>
+                    <pre><code><span class="brackets">&lt;script&gt;</span>
+<span class="brackets">function </span><span class="gold">powitanie() {</span>
+   <span class="brackets"> document</span>.<span class="gold">write</span><span class="pink">(</span><span class="red">'Witaj świecie!'</span><span class="pink">);</span>
+<span class="gold">}</span>
+<span class="brackets">&lt;/script&gt;</span>
+
+<span class="brackets">&lt;button onclick="<span class="gold">powitanie()</span>"&gt;</span>Kliknij mnie<span class="brackets">&lt;/button&gt;</span></code></pre>
+                `,
+                preview: `
+                    <button onclick="powitanie()">Kliknij mnie</button>
+                    <p id="powitanie"></p>
+                `,
+                wyjasnienie:`
+                <h4>Wyjaśnienie działania znaczników:</h4> <br>
+               -script:<br>
+Sekcja ta zawiera kod JavaScript, który zostanie wykonany, gdy strona zostanie załadowana.<br>
+<br>
+-function powitanie() { ... }:<br>
+Tworzy funkcję JavaScript o nazwie powitanie.<br>
+Ta funkcja, po wywołaniu, wykonuje document.write('Witaj świecie!');, co powoduje, że na stronie pojawi się tekst "Witaj świecie!".<br>
+<br>
+-button onclick="powitanie()" Kliknij mnie /button:<br>
+Tworzy przycisk z napisem "Kliknij mnie".<br>
+Kiedy użytkownik kliknie przycisk, onclick="powitanie()" wywołuje funkcję powitanie(), co skutkuje wyświetleniem tekstu "Witaj świecie!" na stronie.<br>
+                `
+            },
+            {
+                id: 10,
+                title: "Podstawowe operacje w JavaScript",
+                content: `
+                    <p>JavaScript pozwala na wykonywanie różnych operacji na danych. W tej lekcji nauczysz się, jak używać zmiennych, funkcji i pętli w JavaScript.</p>
+                    <pre><code><span class="green">// Zmienna</span>
+<span class="brackets">let </span>liczba = 10;
+
+<span class="brackets">function</span><span class="gold"> dodaj</span><span class="gold">(</span>a, b<span class="gold">)</span><span class="gold"> {</span>
+   <span class="brackets"> return</span> a + b;
+<span class="gold">}</span>
+
+<span class="green">// Pętla</span>
+<span class="brackets">for</span> <span class="gold">(</span><span class="brackets">let</span> i = 0; i < 5; i++<span class="gold">)</span><span class="gold">{</span>
+    console.log(i);
+<span class="gold">}</span></code></pre>
+                `,
+                preview: `
+                    <button onclick="dodaj()">Kliknij</button>
+                    <p id="wynik"></p>
+                `,
+                wyjasnienie:`
+                <h4>Wyjaśnienie działania znaczników:</h4> <br>
+               -let liczba = 10;:<br>
+Tworzy zmienną liczba i przypisuje jej wartość 10.<br>
+<br>
+-function dodaj(a, b) { return a + b; }:<br>
+Tworzy funkcję dodaj(a, b), która zwraca sumę dwóch argumentów a i b.<br>
+<br>
+-for (let i = 0; i < 5; i++) { console.log(i); }:<br>
+Pętla wykonuje się 5 razy (od i = 0 do i < 5).<br>
+W każdej iteracji wypisuje wartość zmiennej i (od 0 do 4) na konsolę.<br>
+                `
+            },
+            {
+                id: 11,
+                title: "Manipulacja DOM w JavaScript",
+                content: `
+                    <p>JavaScript pozwala na manipulowanie strukturą DOM (Document Object Model). W tej lekcji nauczysz się, jak używać JavaScript do manipulowania elementami DOM.</p>
+                    <pre><code><span class="green">// Wybieranie elementu</span>
+<span class="brackets">const element </span>= <span class="brackets">document</span>.<span class="gold">getElementById</span><span class="pink">(</span><span class="red">'myElement'</span><span class="pink">)</span>;
+
+<span class="brackets">element</span>.<span class="gold">innerText</span> = <span class="red">'Nowy tekst'</span>;
+
+<span class="brackets">element</span>.<span class="gold">classList.add</span><span class="pink">(</span><span class="red">'nowa-klasa'</span><span class="red">)</span>;
+
+<span class="brackets">element</span>.<span class="gold">remove()</span>;
+</code></pre>
+                `,
+                preview: `
+                    <div id="myElement">Przykładowy element</div>
+                    <button onclick="zmienTekst()">Zmień tekst</button>
+                    <button onclick="dodajKlase()">Dodaj klasę</button>
+                    <button onclick="usunElement()">Usuń element</button>
+                `,
+                wyjasnienie:`
+                <h4>Wyjaśnienie działania znaczników:</h4> <br>
+               -const element = document.getElementById('myElement');<br>
+Pobiera element HTML o id="myElement" i przypisuje go do zmiennej element.<br>
+<br>
+-element.innerText = 'Nowy tekst';<br>
+Zmienia tekst wewnątrz pobranego elementu na "Nowy tekst".<br>
+<br>
+-element.classList.add('nowa-klasa');<br>
+Dodaje klasę nowa-klasa do elementu, co może zmienić jego styl (w zależności od definicji w CSS).<br>
+<br>
+-element.remove();<br>
+Usuwa element z DOM (czyli ze struktury HTML na stronie).<br>
+                `
+            }
+        ];
+
+        function loadLessons() {
+            console.log("Loading lessons");
+            const lessonMap = document.getElementById('lesson-map');
+            lessonMap.innerHTML = '';
+            lessons.forEach(lesson => {
+                const tile = document.createElement('div');
+                tile.className = 'lesson-tile';
+                tile.innerText = lesson.title;
+                tile.onclick = () => showLesson(lesson.id);
+                lessonMap.appendChild(tile);
+            });
+        }
+
+        let m_activeLesson = 0;
+
+        function NextLesson()
+        {
+            if (m_activeLesson+1 > 11) return;
+
+            showLesson(m_activeLesson+1);
+        }
+
+        function PreviousLesson() 
+        {
+            if (m_activeLesson-1 < 1) return;
+
+            showLesson(m_activeLesson-1);
+        }
+
+        function showLesson(id) {
+            console.log("Showing lesson", id);
+            const lesson = lessons.find(l => l.id === id);
+            if (lesson) {
+                document.getElementById('lesson-title').innerText = lesson.title;
+                document.getElementById('lesson-description').innerHTML = lesson.content;
+                document.getElementById('lesson-preview').innerHTML = lesson.preview;
+                document.getElementById('lesson-wyjasnienie').innerHTML = lesson.wyjasnienie;
+                document.getElementById('lesson-map').style.display = 'none';
+                document.getElementById('lesson-content').style.display = 'block';
+                m_activeLesson = id;
+            }
+        }
+
+        function showMap() {
+            console.log("Showing map");
+            document.getElementById('lesson-map').style.display = 'flex';
+            document.getElementById('lesson-content').style.display = 'none';
+        }
+
+        function goBack() {
+            console.log("Going back");
+            window.location.href = "index.html";
+        }
+
+
+        //funkcja do preview id9
+        function powitanie(){
+            document.getElementById("powitanie").innerText="Witaj świecie"
+        }
+        //funkcja do preview id10
+        let a = 10;
+        let b = 4;
+        function dodaj() {
+            document.getElementById("wynik").innerHTML="Wynik dodawania: "+(a+b)+"<br>Wynik pętli: ";
+            for (let i = 0; i < 5; i++) {
+                document.getElementById("wynik").innerHTML+=i+", ";
+                if(i==4){
+                    document.getElementById("wynik").innerHTML+=i;
+                }
+            }
+        }
+        //funkcje do preview id11
+        function zmienTekst(){
+            const element = document.getElementById('myElement');
+            element.innerText = 'Nowy tekst';
+        }
+        function dodajKlase(){
+            const element = document.getElementById('myElement');
+            element.classList.add('nowa-klasa');
+        }
+        function usunElement(){
+            const element = document.getElementById('myElement');
+            element.remove();
+        }
+
+
+        loadLessons();
+    </script>
+</body>
+</html>
