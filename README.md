@@ -32,6 +32,8 @@ Sklonuj projekt
   git clone https://github.com/enzzopl/CodeNest
 ```
 
+Zainstaluj Node.js ze strony: https://nodejs.org/en/download
+
 Wejdz do folderu z projektem
 
 ```bash
