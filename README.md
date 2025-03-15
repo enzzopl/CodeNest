@@ -1,28 +1,56 @@
 # CodeNest
 
+CodeNest to aplikacja edukacyjna umożliwiająca naukę programowania stron internetowych dla każdego od podstaw. Aplikacja zawiera lekcje na różnym poziomie trudności, razem z podglądem, wyglądem i wytłumaczeniem kodu. CodeNest jest wyposażony w edytor kodu wraz z asystem AI - NestBot. W edytorze kodu możesz próbować własnych kombinacjii kodu, czy one działają oraz jak będzie on wyglądał, a jeśli jest jakiś problem, bądź nie lubisz wyglądu zawsze możesz się zapytać NestBota o rady. Na platformie znajduje się również quiz, który sprawdza wiedzę ze wszystkich lekcji.
 
-## Run Locally
+## Screenshots
 
-Clone the project
+Strona głowna
+
+[![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/Home.png)
+
+Edytor kodu
+
+[![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/edytorkodu.png)
+
+Quiz
+
+[![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/quiz.png)
+
+Nauka
+
+[![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/nauka.png)
+
+Etap nauki
+
+[![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/etapnauki.png)
+
+Quiz
+
+[![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/quiz.png)
+
+## Instalacja programu
+
+Sklonuj projekt
 
 ```bash
   git clone https://github.com/enzzopl/CodeNest
 ```
 
-Go to the project directory
+Wejdz do folderu z projektem
 
 ```bash
   cd CodeNest
 ```
 
-Install dependencies
+Zainstaluj potrzebne paczki
 
 ```bash
   npm install
 ```
 
-Start the server
+Wlacz aplikacje
 
 ```bash
-  npm run start
+  mpx electron .
 ```
+
