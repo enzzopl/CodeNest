@@ -12,10 +12,6 @@ Edytor kodu
 
 ![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/edytorkodu.png)
 
-Quiz
-
-![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/quiz.png)
-
 Nauka
 
 ![App Screenshot](https://github.com/enzzopl/CodeNest/blob/main/screenshots/nauka.png)
